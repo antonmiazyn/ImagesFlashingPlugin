@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Images Flashing Plugin | v1.2</title>
+
+  <link rel="stylesheet" href="flashing_v1.2/flashing.css">
+</head>
+<style>
+  * {
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  #wrapper {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .images-list {
+    height: 100vh;
+  }
+
+  .custom-image { width: 25%; }
+
+  .custom-image .image-number {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 1.6rem;
+    font-weight: 900;
+    font-family: "Montserrat", sans-serif;
+    color: #111;
+  }
+</style>
+<body>
+  <div id="wrapper">
+    <div class="content">
+
+      <div data-theme="greyscale" data-order="absolute" data-speed="1.2" data-duration="1.2" class="flashing images-list">
+        <!--
+          CSS CLASSES:
+
+            - .flashing
+                To define "flashing" container
+
+            - .flashing-image
+                To define "flashing" elements. Must be inside "flashing container"
+
+
+          ====================================================================================
+
+
+          DATA ATTRIBUTES:
+
+            - data-theme
+                Color theme of images.
+                May be "color", "sepia" and greyscale."color" by default
+
+            - data-order
+                Order of images in output.
+                May be "orderly", "random", "absolute". "random" by default.
+                Be carefull, in absolutly random mode can occures the repeating of images or
+                some images can be ignored for a long time. Orderly mode meant to
+                output images orderly from first to last and repeat this action
+
+            - data-speed
+                Set the speed of the images switching before pause.
+                It can't be less of equal 0 or have any other value.
+                It's 1.5 by default, that meant that image will be seen
+                for a 150ms
+
+            - data-duration
+                It's a time in seconds that sets the duration of "switching"
+                and pause (it's same values). This value can't be less
+                than 1 and have 2 by default
+
+
+            The better way to create perfect animation is to set aliquot speed and duration
+            values
+
+
+            ====================================================================================
+
+
+            ANIMATIONS:
+
+              If you want to add animation for every flashing element
+              you should to add any element with class '.flashing-animation'
+              inside '.flashing-image' block and add to it attribute
+              'data-src', that must contains link on the sprite-list-image
+              and attribute 'data-amoung', that must contains the number
+              of sprites on image
+
+              It's an image that has image conditions on every step. Image's
+              width will be "cutted" by script on equal parts, using the
+              'data-amoung' attribute's value
+        -->
+
+
+        <div class="flashing-image custom-image">
+          <img src="images/1-min.jpg" alt="1">
+          <div data-src="sprites-circles.png" data-amount="8" class="flashing-animation"></div>
+          <div class="image-number">1</div>
+        </div>
+        <div class="flashing-image custom-image">
+          <img src="images/2-min.jpg" alt="2">
+          <div data-src="sprites-squares.png" data-amount="7" class="flashing-animation"></div>
+          <div class="image-number">2</div>
+        </div>
+        <div class="flashing-image custom-image">
+          <img src="images/3-min.jpg" alt="3">
+          <div data-src="sprites-circles.png" data-amount="8" class="flashing-animation"></div>
+          <div class="image-number">3</div>
+        </div>
+        <div class="flashing-image custom-image">
+          <img src="images/4-min.jpg" alt="4">
+          <div data-src="sprites-squares.png" data-amount="7" class="flashing-animation"></div>
+          <div class="image-number">4</div>
+        </div>
+        <div class="flashing-image custom-image">
+          <img src="images/5-min.jpg" alt="5">
+          <div data-src="sprites-circles.png" data-amount="8" class="flashing-animation"></div>
+          <div class="image-number">5</div>
+        </div>
+        <div class="flashing-image custom-image">
+          <img src="images/6-min.jpg" alt="6">
+          <div data-src="sprites-squares.png" data-amount="7" class="flashing-animation"></div>
+          <div class="image-number">6</div>
+        </div>
+        <div class="flashing-image custom-image">
+          <img src="images/7-min.jpg" alt="7">
+          <div data-src="sprites-circles.png" data-amount="8" class="flashing-animation"></div>
+          <div class="image-number">7</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="flashing_v1.2/execute.js" type="text/javascript"></script>
+</body>
+</html>
