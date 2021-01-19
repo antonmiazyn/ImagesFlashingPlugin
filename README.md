@@ -11,9 +11,11 @@ All usage recommendations you can also find directly in **index.html** file
 ## Get Started
 
 * Connect **flashing_v1.2/flashing.css** file to the `<head>` section of your page. It's optional step, you can easely rewrite this styles or connect your own styles for the *flashing* elements. But connecting **flashing.css** file is the best way to make your animation looking perfect
+
 ![Css connecting](/screens/screen-1.png)
 
 * Connect **flashing_v1.2/execute.js** file before `</body>` closing tag
+
 ![Script connecting](/screens/screen-2.png)
 
 * To define execution container *(it can be more than one)* create the block element and add class `flashing`. Next step is adding to it the special settings attributes (If you forget (or don't want) to set your own settings, animation will start working with default settings)
@@ -58,4 +60,5 @@ The best usage example of this plugin it's a representation of company/project s
 
 The main feature of this plugin is simple pure js code, without need of using jQuery or any other libraries or frameworks. You can easely customize it for your own needs.
 You can try it following the link: **[ImagesFlashingPlugin | DEMO](https://antonmiazyn.github.io/projects/ImagesFlashingJS(v1.2)/index.html)**
+
 ![Demo preview](/screens/screen-4.png)
