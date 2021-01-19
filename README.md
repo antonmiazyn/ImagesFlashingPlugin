@@ -11,8 +11,10 @@ All usage recommendations you can also find directly in **index.html** file
 ## Get Started
 
 * Connect **flashing_v1.2/flashing.css** file to the `<head>` section of your page. It's optional step, you can easely rewrite this styles or connect your own styles for the *flashing* elements. But connecting **flashing.css** file is the best way to make your animation looking perfect
+![Css connecting](/screens/screen-1.png)
 
 * Connect **flashing_v1.2/execute.js** file before `</body>` closing tag
+![Script connecting](/screens/screen-2.png)
 
 * To define execution container *(it can be more than one)* create the block element and add class `flashing`. Next step is adding to it the special settings attributes (If you forget (or don't want) to set your own settings, animation will start working with default settings)
   * `data-theme`: sets the color setting for all images animation includes. Default: `data-theme='color'`
@@ -31,6 +33,8 @@ All usage recommendations you can also find directly in **index.html** file
 * To add the animation to any element you should to create block element inside selected by yourself `flashing-image` block and add him class `flashing-animation`. This block should contain two special attributes with image url and sprites amount, but if you forget (or don't want) to add this attributes, it will be setted by default
   * `data-src`: contains the image full or relative url. Default: `data-src='sprites-circles.png'`
   * `data-amount`: contains the number of sprites in animation. Default: `data-amount='8'`
+  
+![Layout](/screens/screen-3.png)
   
 * How to make right spritelist? Spritelist is a wide image, conditionally parted on the sectors with equal width. Each sector contains the stage of animation. For better understading spritelist check the structure of the **sprites-circles.png** or **sprites-squares.png** file in the root path of this repository
 
@@ -54,3 +58,4 @@ The best usage example of this plugin it's a representation of company/project s
 
 The main feature of this plugin is simple pure js code, without need of using jQuery or any other libraries or frameworks. You can easely customize it for your own needs.
 You can try it following the link: **[ImagesFlashingPlugin | DEMO](https://antonmiazyn.github.io/projects/ImagesFlashingJS(v1.2)/index.html)**
+![Demo preview](/screens/screen-4.png)
