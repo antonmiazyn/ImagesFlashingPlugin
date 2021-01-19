@@ -8,7 +8,7 @@ Pure JS Plugin for Images
 All usage recommendations you can also find directly in **index.html** file
 
 
-## Get Started
+## 💪 Get Started
 
 * Connect **flashing_v1.2/flashing.css** file to the `<head>` section of your page. It's optional step, you can easely rewrite this styles or connect your own styles for the *flashing* elements. But connecting **flashing.css** file is the best way to make your animation looking perfect
 
@@ -41,7 +41,7 @@ All usage recommendations you can also find directly in **index.html** file
 * How to make right spritelist? Spritelist is a wide image, conditionally parted on the sectors with equal width. Each sector contains the stage of animation. For better understading spritelist check the structure of the **sprites-circles.png** or **sprites-squares.png** file in the root path of this repository
 
 
-## How it works
+## 🔧 How it works
 
 1. Script finds all `flashing` containers
 2. In each of this containers it defines the animated elements
@@ -52,11 +52,11 @@ All usage recommendations you can also find directly in **index.html** file
 6. Every step, setted as a duration value, function called `swithing` will start and pausing, providing main execution function to show next element in queue. `switching` in this context means that elements will be shown and hidden from first to last for all duration time with speed, setted in `data-speed` attribute
 
 
-## Usage Examples
+## 💫 Usage Examples
 
 The best usage example of this plugin it's a representation of company/project staff or just interesting animated gallery
 
-## DEMO
+## 👁 DEMO
 
 The main feature of this plugin is simple pure js code, without need of using jQuery or any other libraries or frameworks. You can easely customize it for your own needs.
 You can try it following the link: **[ImagesFlashingPlugin | DEMO](https://antonmiazyn.github.io/projects/ImagesFlashingJS(v1.2)/index.html)**
