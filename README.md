@@ -1,6 +1,10 @@
 # ImagesFlashingPlugin
 Pure JS Plugin for Images
 
+
+![ImagesFlashingPlugin](/Untitled-1.png)
+
+
 All usage recommendations you can also find directly in **index.html** file
 
 
