@@ -19,8 +19,13 @@ window.onload = () => {
     resetAnimation: resetAnimation,
 
     startSwitching: switching,
+    pauseSwitching: pauseSwitching,
     startExecution: startPluginExecution
   }
+
+  /* ----- theme settings ----- */
+
+  const themeSettings = ['greyscale', 'sepia', 'color'];
 
   /* -----   -----------------   ----- */
 
@@ -37,23 +42,30 @@ window.onload = () => {
 
     /* -----   -----------------   ----- */
 
-    flashingContainer.forEach((f_c) => {
-      const flashingElements = f_c.querySelectorAll('.flashing-image');
-      const isElementsExist = flashingElements && flashingElements.length != 0;
+    flashingContainer.forEach((container) => {
+      const flashingElements = container.querySelectorAll('.flashing-image');
+      const isElementsExist = flashingElements && flashingElements.length !== 0;
 
       /* ----- define speed ----- */
-        const speedAttribute = f_c.getAttribute('data-speed');
+        const speedAttribute = container.getAttribute('data-speed');
         const isSpeedSetted = speedAttribute && speedAttribute > 0;
-        const speed = isSpeedSetted ? speedAttribute * 100 : defaultSettings.speed;
+        const speed = isSpeedSetted
+          ? speedAttribute * 100
+          : defaultSettings.speed;
 
       /* ----- define duration ----- */
-        const durationAttribute = f_c.getAttribute('data-duration');
+        const durationAttribute = container.getAttribute('data-duration');
         const isDurationSetted = durationAttribute && durationAttribute >= 1;
-        const duration = isDurationSetted ? durationAttribute * 1000 : defaultSettings.duration;
+        const duration = isDurationSetted
+          ? durationAttribute * 1000
+          : defaultSettings.duration;
 
       /* ----- define order ----- */
-        const orderAttribute = f_c.getAttribute('data-order');
-        const isOrderSetted = orderAttribute && (orderAttribute === 'orderly' || orderAttribute === 'random' || orderAttribute === 'absolute');
+        const orderAttribute = container.getAttribute('data-order');
+        const isOrderSetted = orderAttribute &&
+          (orderAttribute === 'orderly' ||
+          orderAttribute === 'random' ||
+          orderAttribute === 'absolute');
         const orderValue = isOrderSetted ? orderAttribute : defaultSettings.order;
 
         const isOrderly = orderValue === 'orderly';
@@ -63,10 +75,14 @@ window.onload = () => {
           random: utilites.fillRandomIndexArray(flashingElements.length)
         };
 
-        const currentOrder = isOrderly ? orderType.orderly : isRandom ? orderType.random : orderType.orderly;
+        const currentOrder = isOrderly
+          ? orderType.orderly
+          : isRandom
+          ? orderType.random
+          : orderType.orderly;
 
       /* ----- define theme ----- */
-        const theme = f_c.getAttribute('data-theme');
+        const theme = container.getAttribute('data-theme');
 
       /* ----- execution start ----- */
         if(isElementsExist) {
@@ -88,38 +104,27 @@ window.onload = () => {
   /* ----- Set Start ----- */
 
   function setStart(elements) {
-    elements.forEach((el) => {
-      el.classList.add('hidden');
-    });
+    const isArrayEmpty = !elements;
 
-    elements[0].classList.remove('hidden');
-    elements[0].classList.add('shown');
+    if(!isArrayEmpty) {
+      elements.forEach((element) => {
+        element.classList.add('hidden');
+      });
+
+      elements[0].classList.remove('hidden');
+      elements[0].classList.add('shown');
+    }
   }
 
   /* ----- Set Theme ----- */
 
   function setTheme(elements, theme, def) {
-    switch (theme) {
-      case 'greyscale':
-        elements.forEach((el) => {
-          el.classList.add('greyscale')
-        });
-        break;
-      case 'sepia':
-        elements.forEach((el) => {
-          el.classList.add('sepia')
-        });
-        break;
-      case 'color':
-        elements.forEach((el) => {
-          el.classList.add('color')
-        });
-        break;
-      default:
-        elements.forEach((el) => {
-          el.classList.add(def)
-        });
-    }
+    const classToAdd = themeSettings.includes(theme)
+      ? theme
+      : def;
+    elements.forEach(({ classList }) => {
+      classList.add(classToAdd);
+    });
   }
 
   /* ----- Set Animation ----- */
@@ -130,14 +135,14 @@ window.onload = () => {
       data: []
     };
 
-    elements.forEach((el, i) => {
-      const sprite = el.querySelector('.flashing-animation');
+    elements.forEach((element, i) => {
+      const sprite = element.querySelector('.flashing-animation');
 
       if(sprite) {
         const src = sprite.getAttribute("data-src");
         const amount = sprite.getAttribute("data-amount");
 
-        const data_object = {
+        const data = {
           src: 'sprites-circles.png',
           amount: 8
         };
@@ -147,16 +152,16 @@ window.onload = () => {
         const isSrcFilled = !amount && src;
 
         if(isAllFilled) {
-          data_object.src = src;
-          data_object.amount = amount;
+          data.src = src;
+          data.amount = amount;
         } else if(isSrcFilled) {
-          data_object.src = src;
+          data.src = src;
         } else if(isAmountFilled) {
-          data_object.amount = amount;
+          data.amount = amount;
         }
 
         animationData.index.push(i);
-        animationData.data.push(data_object)
+        animationData.data.push(data)
       }
     });
 
@@ -166,7 +171,13 @@ window.onload = () => {
   /* ----- Animation Execution ----- */
 
   let animationFlag;
-  function animateElement(animationIndex, animationData, elements, elementIndex, duration) {
+  function animateElement(
+    animationIndex,
+    animationData,
+    elements,
+    elementIndex,
+    duration
+  ) {
     const sprite = elements[elementIndex].querySelector('.flashing-animation');
 
     if(sprite) {
@@ -174,7 +185,8 @@ window.onload = () => {
 
       const animationIndexValue = animationIndex.indexOf(elementIndex);
 
-      sprite.style.backgroundImage = 'url(' + animationData[animationIndexValue].src + ')';
+      sprite.style.backgroundImage =
+        'url(' + animationData[animationIndexValue].src + ')';
 
       const height = elements[elementIndex].offsetWidth;
       sprite.style.height = height + 'px';
@@ -192,13 +204,13 @@ window.onload = () => {
   function resetAnimation(elements, flag) {
     clearInterval(flag);
 
-    elements.forEach((el) => {
-      const sprite = el.querySelector('.flashing-animation');
+    elements.forEach((element) => {
+      const sprite = element.querySelector('.flashing-animation');
       if(sprite) {
         sprite.style.backgroundImage = 'none';
         sprite.style.backgroundPosition = '0 0';
 
-        const height = el.offsetWidth;
+        const height = element.offsetWidth;
         sprite.style.height = height + 'px';
       }
     });
@@ -207,12 +219,7 @@ window.onload = () => {
   /* ----- Fill Default Index Array ----- */
 
   function fillDefaultIndexArray(length) {
-    const array = [];
-    for(let i = 0; i < length; i++) {
-      array.push(i);
-    }
-
-    return array;
+    return Array.from(Array(length).keys());
   }
 
   /* ----- Fill Random Index Array ----- */
@@ -245,40 +252,61 @@ window.onload = () => {
           currentIndex++;
         }
 
-        elements.forEach((el) => {
-          el.classList.remove('shown');
-          el.classList.add('hidden');
-        });
+        utilites.pauseSwitching(elements);
 
-        elements[index[currentIndex]].classList.remove('hidden');
-        elements[index[currentIndex]].classList.add('shown');
+        const elemIndex = index[currentIndex];
+
+        elements[elemIndex].classList.remove('hidden');
+        elements[elemIndex].classList.add('shown');
       }, speed);
     } else {
       clearInterval(intervalFlag)
     }
   }
 
+  /* ----- pause switching ----- */
+
+  function pauseSwitching(elements) {
+    elements.forEach((element) => {
+      element.classList.remove('shown');
+      element.classList.add('hidden');
+    });
+  }
+
 
 
   /*      =============================================      Plugin Execution      =============================================      */
 
-  function startPluginExecution(elements, orderType, orderArray, speed, animationIndex, animationData, duration) {
+  function startPluginExecution(
+    elements,
+    orderType,
+    orderArray,
+    speed,
+    animationIndex,
+    animationData,
+    duration
+  ) {
     let pause = false;
     let i = 0;
 
-    const infiniteAnimation = setInterval(() => {
+    setInterval(() => {
       utilites.startSwitching(elements, orderArray, speed, pause);
 
       if(pause) {
-        elements.forEach((el) => {
-          el.classList.remove('shown');
-          el.classList.add('hidden');
-        });
+        utilites.pauseSwitching(elements);
 
-        elements[orderArray[i]].classList.remove('hidden');
-        elements[orderArray[i]].classList.add('shown');
+        const orderVar = orderArray[i];
+        const selectedElement = elements[orderVar];
+        selectedElement.classList.remove("hidden");
+        selectedElement.classList.add("shown");
 
-        utilites.startAnimation(animationIndex, animationData, elements, orderArray[i], duration);
+        utilites.startAnimation(
+          animationIndex,
+          animationData,
+          elements,
+          orderVar,
+          duration
+        );
 
         if(i < elements.length - 1) {
           i++
