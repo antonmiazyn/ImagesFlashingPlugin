@@ -69,7 +69,7 @@ window.onload = () => {
         const orderValue = isOrderSetted ? orderAttribute : defaultSettings.order;
 
         const isOrderly = orderValue === 'orderly';
-        const isRandom = (orderValue === 'random' || orderValue === 'absolute');
+        const isRandom = orderValue === 'random' || orderValue === 'absolute';
         const orderType = {
           orderly: utilites.fillDefaultIndexArray(flashingElements.length),
           random: utilites.fillRandomIndexArray(flashingElements.length)
@@ -87,12 +87,21 @@ window.onload = () => {
       /* ----- execution start ----- */
         if(isElementsExist) {
           utilites.setStart(flashingElements);
-          utilites.setTheme(flashingElements, theme, defaultSettings.theme);
+          utilites.setTheme(flashingElements, themeSettings, theme, defaultSettings.theme);
 
           const animationIndex = utilites.setAnimation(flashingElements).index;
           const animationData = utilites.setAnimation(flashingElements).data;
 
-          utilites.startExecution(flashingElements, orderValue, currentOrder, speed, animationIndex, animationData, duration); //the very start of the execution
+          const startExecutionParams = {
+            elements: flashingElements,
+            orderType: orderValue,
+            orderArray: currentOrder,
+            speed: speed,
+            animationIndex: animationIndex,
+            animationData: animationData,
+            duration: duration
+          }
+          utilites.startExecution(startExecutionParams); //the very start of execution
         }
     });
   }
@@ -104,7 +113,7 @@ window.onload = () => {
   /* ----- Set Start ----- */
 
   function setStart(elements) {
-    const isArrayEmpty = !elements;
+    const isArrayEmpty = !elements && elements.length > 0;
 
     if(!isArrayEmpty) {
       elements.forEach((element) => {
@@ -118,8 +127,8 @@ window.onload = () => {
 
   /* ----- Set Theme ----- */
 
-  function setTheme(elements, theme, def) {
-    const classToAdd = themeSettings.includes(theme)
+  function setTheme(elements, settings, theme, def) {
+    const classToAdd = settings.includes(theme)
       ? theme
       : def;
     elements.forEach(({ classList }) => {
@@ -148,15 +157,15 @@ window.onload = () => {
         };
 
         const isAllFilled = amount && src;
-        const isAmountFilled = amount && !src;
-        const isSrcFilled = !amount && src;
+        const isOnlyAmountFilled = amount && !src;
+        const isOnlySrcFilled = !amount && src;
 
         if(isAllFilled) {
           data.src = src;
           data.amount = amount;
-        } else if(isSrcFilled) {
+        } else if(isOnlySrcFilled) {
           data.src = src;
-        } else if(isAmountFilled) {
+        } else if(isOnlyAmountFilled) {
           data.amount = amount;
         }
 
@@ -171,13 +180,13 @@ window.onload = () => {
   /* ----- Animation Execution ----- */
 
   let animationFlag;
-  function animateElement(
+  function animateElement({
     animationIndex,
     animationData,
     elements,
     elementIndex,
     duration
-  ) {
+  }) {
     const sprite = elements[elementIndex].querySelector('.flashing-animation');
 
     if(sprite) {
@@ -241,7 +250,6 @@ window.onload = () => {
   let intervalFlag;
   function switching(elements, order, speed, pause) {
     if(!pause) {
-
       const index = order;
       let currentIndex = 0;
 
@@ -260,7 +268,7 @@ window.onload = () => {
         elements[elemIndex].classList.add('shown');
       }, speed);
     } else {
-      clearInterval(intervalFlag)
+      clearInterval(intervalFlag);
     }
   }
 
@@ -277,7 +285,7 @@ window.onload = () => {
 
   /*      =============================================      Plugin Execution      =============================================      */
 
-  function startPluginExecution(
+  function startPluginExecution({
     elements,
     orderType,
     orderArray,
@@ -285,7 +293,7 @@ window.onload = () => {
     animationIndex,
     animationData,
     duration
-  ) {
+  }) {
     let pause = false;
     let i = 0;
 
@@ -300,13 +308,14 @@ window.onload = () => {
         selectedElement.classList.remove("hidden");
         selectedElement.classList.add("shown");
 
-        utilites.startAnimation(
-          animationIndex,
-          animationData,
-          elements,
-          orderVar,
-          duration
-        );
+        const startAnimationParams = {
+          animationIndex: animationIndex,
+          animationData: animationData,
+          elements: elements,
+          elementIndex: orderVar,
+          duration: duration
+        };
+        utilites.startAnimation(startAnimationParams);
 
         if(i < elements.length - 1) {
           i++
@@ -322,6 +331,6 @@ window.onload = () => {
       }
 
       pause = !pause;
-    }, duration)
+    }, duration);
   }
-}
+};
