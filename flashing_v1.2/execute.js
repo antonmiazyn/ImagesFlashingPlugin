@@ -2,13 +2,13 @@ window.onload = () => {
 
   /*      =============================================      Define Flashing Elements      =============================================      */
 
-  const flashingContainer = document.querySelectorAll('.flashing');
-  const isFlashingContainer = flashingContainer && flashingContainer.length > 0;
+  const FLASHING_CONTAINERS = document.querySelectorAll('.flashing');
+  const IS_FLASHING_CONTAINER = FLASHING_CONTAINERS && FLASHING_CONTAINERS.length > 0;
 
-  /* ----- utilites list ----- */
+  /* ----- UTILITES list ----- */
 
-  const utilites = {
-    setStart: setStart,
+  const UTILITES = {
+    setStartNodeCondition: setStartNodeCondition,
     setTheme: setTheme,
     setAnimation: setAnimation,
 
@@ -25,11 +25,11 @@ window.onload = () => {
 
   /* ----- theme settings ----- */
 
-  const themeSettings = ['greyscale', 'sepia', 'color'];
+  const THEME_SETTINGS = ['greyscale', 'sepia', 'color'];
 
   /* -----   -----------------   ----- */
 
-  if(isFlashingContainer) {
+  if(IS_FLASHING_CONTAINER) {
 
     /* ----- default settings ----- */
 
@@ -42,7 +42,7 @@ window.onload = () => {
 
     /* -----   -----------------   ----- */
 
-    flashingContainer.forEach((container) => {
+    FLASHING_CONTAINERS.forEach((container) => {
       const flashingElements = container.querySelectorAll('.flashing-image');
       const isElementsExist = flashingElements && flashingElements.length !== 0;
 
@@ -71,11 +71,11 @@ window.onload = () => {
         const isOrderly = orderValue === 'orderly';
         const isRandom = orderValue === 'random' || orderValue === 'absolute';
         const orderType = {
-          orderly: utilites.fillDefaultIndexArray(flashingElements.length),
-          random: utilites.fillRandomIndexArray(flashingElements.length)
+          orderly: UTILITES.fillDefaultIndexArray(flashingElements.length),
+          random: UTILITES.fillRandomIndexArray(flashingElements.length)
         };
 
-        const currentOrder = isOrderly
+        const orderArray = isOrderly
           ? orderType.orderly
           : isRandom
           ? orderType.random
@@ -86,22 +86,18 @@ window.onload = () => {
 
       /* ----- execution start ----- */
         if(isElementsExist) {
-          utilites.setStart(flashingElements);
-          utilites.setTheme(flashingElements, themeSettings, theme, defaultSettings.theme);
+          UTILITES.setStartNodeCondition(flashingElements);
+          UTILITES.setTheme(flashingElements, THEME_SETTINGS, theme, defaultSettings.theme);
 
-          const animationIndex = utilites.setAnimation(flashingElements).index;
-          const animationData = utilites.setAnimation(flashingElements).data;
+          const animationIndex = UTILITES.setAnimation(flashingElements).index;
+          const animationData = UTILITES.setAnimation(flashingElements).data;
 
           const startExecutionParams = {
             elements: flashingElements,
             orderType: orderValue,
-            orderArray: currentOrder,
-            speed: speed,
-            animationIndex: animationIndex,
-            animationData: animationData,
-            duration: duration
+            orderArray, speed, animationIndex, animationData, duration
           }
-          utilites.startExecution(startExecutionParams); //the very start of execution
+          UTILITES.startExecution(startExecutionParams); //the very start of execution
         }
     });
   }
@@ -112,10 +108,10 @@ window.onload = () => {
 
   /* ----- Set Start ----- */
 
-  function setStart(elements) {
-    const isArrayEmpty = !elements && elements.length > 0;
+  function setStartNodeCondition(elements) {
+    const isArrayExist = elements && elements.length > 0;
 
-    if(!isArrayEmpty) {
+    if(isArrayExist) {
       elements.forEach((element) => {
         element.classList.add('hidden');
       });
@@ -131,9 +127,14 @@ window.onload = () => {
     const classToAdd = settings.includes(theme)
       ? theme
       : def;
-    elements.forEach(({ classList }) => {
-      classList.add(classToAdd);
-    });
+
+    const isArrayExist = elements && elements.length > 0;
+
+    if(isArrayExist) {
+      elements.forEach(({ classList }) => {
+        classList.add(classToAdd);
+      });
+    }
   }
 
   /* ----- Set Animation ----- */
@@ -144,49 +145,54 @@ window.onload = () => {
       data: []
     };
 
-    elements.forEach((element, i) => {
-      const sprite = element.querySelector('.flashing-animation');
+    const isArrayExist = elements && elements.length > 0;
 
-      if(sprite) {
-        const src = sprite.getAttribute("data-src");
-        const amount = sprite.getAttribute("data-amount");
+    if(isArrayExist) {
+      elements.forEach((element, i) => {
+        const sprite = element.querySelector('.flashing-animation');
 
-        const data = {
-          src: 'sprites-circles.png',
-          amount: 8
-        };
+        if(sprite) {
+          const src = sprite.getAttribute("data-src");
+          const amount = sprite.getAttribute("data-amount");
 
-        const isAllFilled = amount && src;
-        const isOnlyAmountFilled = amount && !src;
-        const isOnlySrcFilled = !amount && src;
+          const data = {
+            src: 'sprites-circles.png',
+            amount: 8
+          };
 
-        if(isAllFilled) {
-          data.src = src;
-          data.amount = amount;
-        } else if(isOnlySrcFilled) {
-          data.src = src;
-        } else if(isOnlyAmountFilled) {
-          data.amount = amount;
+          const isAllFilled = amount && src;
+          const isOnlyAmountFilled = amount && !src;
+          const isOnlySrcFilled = !amount && src;
+
+          if(isAllFilled) {
+            data.src = src;
+            data.amount = amount;
+          } else if(isOnlySrcFilled) {
+            data.src = src;
+          } else if(isOnlyAmountFilled) {
+            data.amount = amount;
+          }
+
+          animationData.index.push(i);
+          animationData.data.push(data)
         }
-
-        animationData.index.push(i);
-        animationData.data.push(data)
-      }
-    });
+      });
+    }
 
     return animationData;
   }
 
   /* ----- Animation Execution ----- */
 
-  let animationFlag;
-  function animateElement({
-    animationIndex,
-    animationData,
-    elements,
-    elementIndex,
-    duration
-  }) {
+  let ANIMATION_FLAG;
+  const ANIMATE_ELEMENT_PARAMS = {
+    animationIndex: 0,
+    animationData: 0,
+    elements: [],
+    elementIndex: 0,
+    duration: 1
+  }
+  function animateElement(ANIMATE_ELEMENT_PARAMS) {
     const sprite = elements[elementIndex].querySelector('.flashing-animation');
 
     if(sprite) {
@@ -201,7 +207,7 @@ window.onload = () => {
       sprite.style.height = height + 'px';
       const shift = sprite.offsetHeight;
 
-      animationFlag = setInterval(() => {
+      ANIMATION_FLAG = setInterval(() => {
         step -= shift;
         sprite.style.backgroundPosition = step + 'px 0';
       }, duration / animationData[animationIndexValue].amount);
@@ -212,17 +218,22 @@ window.onload = () => {
 
   function resetAnimation(elements, flag) {
     clearInterval(flag);
+    const isArrayExist = elements && elements.length > 0;
 
-    elements.forEach((element) => {
-      const sprite = element.querySelector('.flashing-animation');
-      if(sprite) {
-        sprite.style.backgroundImage = 'none';
-        sprite.style.backgroundPosition = '0 0';
+    if(isArrayExist) {
+      elements.forEach((element) => {
+        const sprite = element.querySelector('.flashing-animation');
+        if(sprite) {
+          sprite.style.backgroundImage = 'none';
+          sprite.style.backgroundPosition = '0 0';
 
-        const height = element.offsetWidth;
-        sprite.style.height = height + 'px';
-      }
-    });
+          const height = element.offsetWidth;
+          sprite.style.height = height + 'px';
+        }
+      });
+    } else {
+      return;
+    }
   }
 
   /* ----- Fill Default Index Array ----- */
@@ -247,38 +258,43 @@ window.onload = () => {
 
   /* ----- Start Switching ----- */
 
-  let intervalFlag;
+  let SWITCHING_INTERVAL_FLAG;
   function switching(elements, order, speed, pause) {
     if(!pause) {
-      const index = order;
       let currentIndex = 0;
 
-      intervalFlag = setInterval(() => {
+      SWITCHING_INTERVAL_FLAG = setInterval(() => {
         if(currentIndex === elements.length - 1) {
           currentIndex = 0;
         } else {
           currentIndex++;
         }
 
-        utilites.pauseSwitching(elements);
+        UTILITES.pauseSwitching(elements);
 
-        const elemIndex = index[currentIndex];
+        const currentElementIndex = order[currentIndex];
 
-        elements[elemIndex].classList.remove('hidden');
-        elements[elemIndex].classList.add('shown');
+        elements[currentElementIndex].classList.remove('hidden');
+        elements[currentElementIndex].classList.add('shown');
       }, speed);
     } else {
-      clearInterval(intervalFlag);
+      clearInterval(SWITCHING_INTERVAL_FLAG);
     }
   }
 
   /* ----- pause switching ----- */
 
   function pauseSwitching(elements) {
-    elements.forEach((element) => {
-      element.classList.remove('shown');
-      element.classList.add('hidden');
-    });
+    const isArrayExist = elements && elements.length > 0;
+
+    if(isArrayExist) {
+      elements.forEach((element) => {
+        element.classList.remove('shown');
+        element.classList.add('hidden');
+      });
+    } else {
+      return;
+    }
   }
 
 
@@ -298,10 +314,10 @@ window.onload = () => {
     let i = 0;
 
     setInterval(() => {
-      utilites.startSwitching(elements, orderArray, speed, pause);
+      UTILITES.startSwitching(elements, orderArray, speed, pause);
 
       if(pause) {
-        utilites.pauseSwitching(elements);
+        UTILITES.pauseSwitching(elements);
 
         const orderVar = orderArray[i];
         const selectedElement = elements[orderVar];
@@ -315,7 +331,7 @@ window.onload = () => {
           elementIndex: orderVar,
           duration: duration
         };
-        utilites.startAnimation(startAnimationParams);
+        UTILITES.startAnimation(startAnimationParams);
 
         if(i < elements.length - 1) {
           i++
@@ -323,11 +339,11 @@ window.onload = () => {
           i = 0;
 
           if(orderType === 'absolute') {
-            orderArray = utilites.fillRandomIndexArray(elements.length)
+            orderArray = UTILITES.fillRandomIndexArray(elements.length)
           }
         }
       } else {
-        utilites.resetAnimation(elements, animationFlag);
+        UTILITES.resetAnimation(elements, ANIMATION_FLAG);
       }
 
       pause = !pause;
